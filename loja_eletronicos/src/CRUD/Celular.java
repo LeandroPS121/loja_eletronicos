@@ -5,6 +5,7 @@
 package CRUD;
 
 import CONEXAO_BANCO.Banco_dados;
+import MODULO_INICIAL.Home;
 import java.awt.Component;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
@@ -259,6 +260,11 @@ public class Celular extends javax.swing.JDialog {
         jBcancelar.setText("Cancelar");
         jBcancelar.setIconTextGap(-70);
         jBcancelar.setInheritsPopupMenu(true);
+        jBcancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBcancelarActionPerformed(evt);
+            }
+        });
 
         jCBestado_celular.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NOVO", "SEMI-NOVO" }));
         jCBestado_celular.addActionListener(new java.awt.event.ActionListener() {
@@ -527,9 +533,11 @@ public class Celular extends javax.swing.JDialog {
         limpartabela();
     }//GEN-LAST:event_jBLimparActionPerformed
 
-    private void jCBestado_celularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBestado_celularActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCBestado_celularActionPerformed
+    private void jBcancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBcancelarActionPerformed
+        Home h = new Home();
+        this.dispose();
+        h.setVisible(true);
+    }//GEN-LAST:event_jBcancelarActionPerformed
 
     /**
      * @param args the command line arguments
