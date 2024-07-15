@@ -61,7 +61,9 @@ public class Login extends javax.swing.JDialog {
         }
     }
     private void enviaParaProximaPagina(){
-        
+        Home h = new Home();
+        this.dispose();
+        h.setVisible(true);
     }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

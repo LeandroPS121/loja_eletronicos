@@ -5,6 +5,7 @@
 package CRUD;
 
 import CONEXAO_BANCO.Banco_dados;
+import MODULO_INICIAL.Home;
 import java.awt.Component;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
@@ -259,6 +260,11 @@ public class Celular extends javax.swing.JDialog {
         jBcancelar.setText("Cancelar");
         jBcancelar.setIconTextGap(-70);
         jBcancelar.setInheritsPopupMenu(true);
+        jBcancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBcancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPinfo_celularLayout = new javax.swing.GroupLayout(jPinfo_celular);
         jPinfo_celular.setLayout(jPinfo_celularLayout);
@@ -519,6 +525,12 @@ public class Celular extends javax.swing.JDialog {
     private void jBLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBLimparActionPerformed
         limpartabela();
     }//GEN-LAST:event_jBLimparActionPerformed
+
+    private void jBcancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBcancelarActionPerformed
+        Home h = new Home();
+        this.dispose();
+        h.setVisible(true);
+    }//GEN-LAST:event_jBcancelarActionPerformed
 
     /**
      * @param args the command line arguments
