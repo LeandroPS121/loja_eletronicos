@@ -21,7 +21,7 @@ import javax.swing.table.DefaultTableModel;
 public class Celular extends javax.swing.JDialog {
 
     /**
-     * Creates new form produto
+     
      */
     public Celular(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -40,7 +40,7 @@ public class Celular extends javax.swing.JDialog {
                         +"values(?,?,?,?,?,?)";
                 PreparedStatement smtp = bd.conexao.prepareStatement(query);
                 smtp.setString(1, jTmodelo_celular.getText());
-                smtp.setString(2, jTestado_celular.getText());
+                smtp.setString(2, String.valueOf(jCBestado_celular.getSelectedIndex()));
                 smtp.setString(3, jTmemoria_ram_celular.getText());
                 smtp.setString(4, jTprocessador_celular.getText());
                 smtp.setString(5, jTarmazenamento_celular.getText());
@@ -85,7 +85,7 @@ public class Celular extends javax.swing.JDialog {
                String query = "Update celular set modelo_celular =?, estado_celular =?, memoria_ram_celular =?, processador_celular =?, armazenamento_celular =?, bateria_celular =? where id_celular = ?";
                PreparedStatement alterar = bd.conexao.prepareStatement(query);
                alterar.setString(1,jTmodelo_celular.getText());
-               alterar.setString(2,jTestado_celular.getText());
+               alterar.setString(2,String.valueOf(jCBestado_celular.getSelectedIndex()));
                alterar.setString(3,jTmemoria_ram_celular.getText());
                alterar.setString(4,jTprocessador_celular.getText());
                alterar.setString(5,jTarmazenamento_celular.getText());
@@ -145,7 +145,7 @@ public class Celular extends javax.swing.JDialog {
                 if (selectedRow != -1) {
                     jLID.setText(jTtabela_pesquisa.getValueAt(selectedRow, 0).toString());
                     jTmodelo_celular.setText(jTtabela_pesquisa.getValueAt(selectedRow, 1).toString());
-                    jTestado_celular.setText(jTtabela_pesquisa.getValueAt(selectedRow, 2).toString());
+                    jCBestado_celular.setSelectedIndex(Integer.parseInt(jTtabela_pesquisa.getValueAt(selectedRow, 2).toString()));
                     jTmemoria_ram_celular.setText(jTtabela_pesquisa.getValueAt(selectedRow, 3).toString());
                     jTprocessador_celular.setText(jTtabela_pesquisa.getValueAt(selectedRow, 4).toString());
                     jTarmazenamento_celular.setText(jTtabela_pesquisa.getValueAt(selectedRow, 5).toString());
@@ -183,7 +183,7 @@ public class Celular extends javax.swing.JDialog {
         jBAlterar = new javax.swing.JButton();
         jBcadastrar = new javax.swing.JButton();
         jBcancelar = new javax.swing.JButton();
-        jTestado_celular = new javax.swing.JTextField();
+        jCBestado_celular = new javax.swing.JComboBox<>();
         jPtabela_celular = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -260,6 +260,13 @@ public class Celular extends javax.swing.JDialog {
         jBcancelar.setIconTextGap(-70);
         jBcancelar.setInheritsPopupMenu(true);
 
+        jCBestado_celular.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NOVO", "SEMI-NOVO" }));
+        jCBestado_celular.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCBestado_celularActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPinfo_celularLayout = new javax.swing.GroupLayout(jPinfo_celular);
         jPinfo_celular.setLayout(jPinfo_celularLayout);
         jPinfo_celularLayout.setHorizontalGroup(
@@ -278,8 +285,8 @@ public class Celular extends javax.swing.JDialog {
                     .addGroup(jPinfo_celularLayout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTestado_celular, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
-                        .addGap(185, 185, 185)
+                        .addComponent(jCBestado_celular, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPinfo_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addComponent(jLabel6)
@@ -301,7 +308,7 @@ public class Celular extends javax.swing.JDialog {
                 .addComponent(jBlimpar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jBcancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         jPinfo_celularLayout.setVerticalGroup(
             jPinfo_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -315,7 +322,7 @@ public class Celular extends javax.swing.JDialog {
                         .addGap(18, 18, 18)
                         .addGroup(jPinfo_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(jTestado_celular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jCBestado_celular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPinfo_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7)
@@ -520,6 +527,10 @@ public class Celular extends javax.swing.JDialog {
         limpartabela();
     }//GEN-LAST:event_jBLimparActionPerformed
 
+    private void jCBestado_celularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBestado_celularActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCBestado_celularActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -571,6 +582,7 @@ public class Celular extends javax.swing.JDialog {
     private javax.swing.JButton jBcancelar;
     private javax.swing.JButton jBexcluir;
     private javax.swing.JButton jBlimpar;
+    private javax.swing.JComboBox<String> jCBestado_celular;
     private javax.swing.JLabel jLID;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -588,7 +600,6 @@ public class Celular extends javax.swing.JDialog {
     private javax.swing.JTextField jTPesquisa;
     private javax.swing.JTextField jTarmazenamento_celular;
     private javax.swing.JTextField jTbateria_celular;
-    private javax.swing.JTextField jTestado_celular;
     private javax.swing.JTextField jTmemoria_ram_celular;
     private javax.swing.JTextField jTmodelo_celular;
     private javax.swing.JTextField jTprocessador_celular;
