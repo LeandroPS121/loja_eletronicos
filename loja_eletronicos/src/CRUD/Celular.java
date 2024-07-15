@@ -4,6 +4,16 @@
  */
 package CRUD;
 
+import CONEXAO_BANCO.Banco_dados;
+import java.awt.Component;
+import java.sql.ResultSet;
+import java.sql.PreparedStatement;
+import javax.swing.JOptionPane;
+import java.sql.SQLException;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author sil9jvl
@@ -17,6 +27,113 @@ public class Celular extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
     }
+    Banco_dados bd = new Banco_dados();
+    private void cadastro_celular(){
+        if(bd.getConnection()){
+            try{
+                String query = "insert celular"
+                        +"(modelo_celular,estado_celular,memoria_ram_celular,processador_celular,armazenamento_celular,bateria_celular)"
+                        +"values(?,?,?,?,?,?)";
+                PreparedStatement smtp = bd.conexao.prepareStatement(query);
+                smtp.setString(1, jTmodelo_celular.getText());
+                smtp.setString(2, jTestado_celular.getText());
+                smtp.setString(3, jTmemoria_ram_celular.getText());
+                smtp.setString(4, jTprocessador_celular.getText());
+                smtp.setString(5, jTarmazenamento_celular.getText());
+                smtp.setString(6, jTbateria_celular.getText());
+                smtp.executeUpdate();
+                    JOptionPane.showMessageDialog(null,"Dados Gravados!");
+                    smtp.close();
+                    bd.conexao.close();
+                }catch(SQLException erro){
+                    JOptionPane.showMessageDialog(null,"Erro de gravação!" + erro.toString());
+            }
+        }
+    }
+    private void pesquisa_celular(){
+        if (bd.getConnection()) {
+            try{
+                String query = "select * from celular where modelo_celular like ?";
+                PreparedStatement smtp = bd.conexao.prepareStatement(query);
+                smtp.setString(1,"%"+jTPesquisa.getText()+"%");
+                ResultSet rs = smtp.executeQuery();
+                DefaultTableModel tabela = (DefaultTableModel) jTtabela_pesquisa.getModel();
+                tabela.setNumRows(0);
+                while(rs.next()){
+                    tabela.addRow(new Object[]{
+                        rs.getString("id_celular"),
+                        rs.getString("modelo_celular"),
+                        rs.getString("estado_celular"),
+                        rs.getString("memoria_ram_celular"),
+                        rs.getString("processador_celular"),
+                        rs.getString("armazenamento_celular"),
+                        rs.getString("bateria_celular"),
+                    });
+                }
+            }catch(SQLException e){
+                System.out.println("Erro ao pesquisar"+e.toString());
+            }
+        }
+    }
+    private void alterar_celular(){
+        if (bd.getConnection()) {
+            try{
+               String query = "Update celular set modelo_celular =?, estado_celular =?, memoria_ram_celular =?, processador_celular =?, armazenamento_celular =?, bateria_celular =? where id_celular = ?";
+               PreparedStatement alterar = bd.conexao.prepareStatement(query);
+               alterar.setString(1,jTmodelo_celular.getText());
+               alterar.setString(2,jTestado_celular.getText());
+               alterar.setString(3,jTmemoria_ram_celular.getText());
+               alterar.setString(4,jTprocessador_celular.getText());
+               alterar.setString(5,jTarmazenamento_celular.getText());
+               alterar.setString(6,jTbateria_celular.getText());
+               alterar.setString(7,jLID.getText());
+               alterar.executeUpdate();
+               JOptionPane.showMessageDialog(null,"Dados alterados!");
+                    alterar.close();
+                    bd.conexao.close();
+            }catch(SQLException e){
+                JOptionPane.showMessageDialog(null,"Erro de SQL!" + e.toString());
+            }
+        }
+    }
+    private void excluir_celular(){
+        if(bd.getConnection()){
+            try{
+                String query = "delete from celular where id_celular =?";
+                PreparedStatement excluir = bd.conexao.prepareStatement(query);
+                String index = (String)jTtabela_pesquisa.getModel().getValueAt(jTtabela_pesquisa.getSelectedRow(), 0);
+                excluir.setString(1,index);
+                
+                int escolha = JOptionPane.showConfirmDialog(null,"Deseja excluir?","Confirmacao",JOptionPane.YES_NO_OPTION);
+                if (escolha == JOptionPane.YES_OPTION) {
+                    int resultado = excluir.executeUpdate();
+                    if (resultado>0) {
+                        JOptionPane.showMessageDialog(null,"Celular excluido com sucesso");
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Nao foi possivel excluir o celular");
+                    }
+                    excluir.close();
+                    bd.conexao.close();
+                }
+            }catch(SQLException e){
+                JOptionPane.showMessageDialog(null, "Falha ao excluir o celular"+e.toString());
+            }
+        }
+    }
+    private static void limparcampos(JPanel jPanel){
+        Component[] componentes = jPanel.getComponents();
+        JOptionPane.showMessageDialog(null, "Tabom");
+        for(Component componente : componentes){
+            if(componente instanceof JTextField){
+                JTextField camposTF = (JTextField)componente;
+                camposTF.setText("");
+            }
+        }
+    }
+    private void limpartabela(){
+        DefaultTableModel table = (DefaultTableModel)jTtabela_pesquisa.getModel();
+        table.setNumRows(0);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -29,7 +146,7 @@ public class Celular extends javax.swing.JDialog {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
+        jPinfo_celular = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -38,10 +155,24 @@ public class Celular extends javax.swing.JDialog {
         jLabel8 = new javax.swing.JLabel();
         jTmodelo_celular = new javax.swing.JTextField();
         jTmemoria_ram_celular = new javax.swing.JTextField();
-        jTestado_celular = new javax.swing.JTextField();
         jTprocessador_celular = new javax.swing.JTextField();
         jTbateria_celular = new javax.swing.JTextField();
         jTarmazenamento_celular = new javax.swing.JTextField();
+        jBlimpar = new javax.swing.JButton();
+        jBexcluir = new javax.swing.JButton();
+        jBAlterar = new javax.swing.JButton();
+        jBcadastrar = new javax.swing.JButton();
+        jBcancelar = new javax.swing.JButton();
+        jTestado_celular = new javax.swing.JTextField();
+        jPtabela_celular = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jTPesquisa = new javax.swing.JTextField();
+        jBPesquisar = new javax.swing.JButton();
+        jBLimpar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTtabela_pesquisa = new javax.swing.JTable();
+        jLID = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -68,67 +199,223 @@ public class Celular extends javax.swing.JDialog {
         jLabel8.setFont(new java.awt.Font("Bosch Sans", 0, 18)); // NOI18N
         jLabel8.setText("Processador:");
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+        jBlimpar.setFont(new java.awt.Font("Bosch Office Sans", 1, 12)); // NOI18N
+        jBlimpar.setText("Limpar");
+        jBlimpar.setIconTextGap(-60);
+        jBlimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBlimparActionPerformed(evt);
+            }
+        });
+
+        jBexcluir.setFont(new java.awt.Font("Bosch Office Sans", 1, 12)); // NOI18N
+        jBexcluir.setText("Excluir");
+        jBexcluir.setIconTextGap(-60);
+        jBexcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBexcluirActionPerformed(evt);
+            }
+        });
+
+        jBAlterar.setFont(new java.awt.Font("Bosch Office Sans", 1, 12)); // NOI18N
+        jBAlterar.setText("Alterar");
+        jBAlterar.setIconTextGap(-60);
+        jBAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBAlterarActionPerformed(evt);
+            }
+        });
+
+        jBcadastrar.setFont(new java.awt.Font("Bosch Office Sans", 1, 12)); // NOI18N
+        jBcadastrar.setText("Cadastrar");
+        jBcadastrar.setIconTextGap(-80);
+        jBcadastrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBcadastrarActionPerformed(evt);
+            }
+        });
+
+        jBcancelar.setFont(new java.awt.Font("Bosch Office Sans", 1, 12)); // NOI18N
+        jBcancelar.setText("Cancelar");
+        jBcancelar.setIconTextGap(-70);
+        jBcancelar.setInheritsPopupMenu(true);
+
+        javax.swing.GroupLayout jPinfo_celularLayout = new javax.swing.GroupLayout(jPinfo_celular);
+        jPinfo_celular.setLayout(jPinfo_celularLayout);
+        jPinfo_celularLayout.setHorizontalGroup(
+            jPinfo_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPinfo_celularLayout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTestado_celular))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPinfo_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPinfo_celularLayout.createSequentialGroup()
+                        .addGroup(jPinfo_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel7))
                         .addGap(46, 46, 46)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPinfo_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jTmodelo_celular, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTmemoria_ram_celular, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTprocessador_celular, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTbateria_celular, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTarmazenamento_celular, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26))
+                            .addComponent(jTmemoria_ram_celular, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPinfo_celularLayout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTestado_celular, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
+                        .addGap(185, 185, 185)
+                        .addGroup(jPinfo_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel8))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPinfo_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTprocessador_celular, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTbateria_celular, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTarmazenamento_celular, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(19, 19, 19))
+            .addGroup(jPinfo_celularLayout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addComponent(jBcadastrar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jBAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jBexcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19)
+                .addComponent(jBlimpar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jBcancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        jPinfo_celularLayout.setVerticalGroup(
+            jPinfo_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPinfo_celularLayout.createSequentialGroup()
                 .addGap(29, 29, 29)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPinfo_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPinfo_celularLayout.createSequentialGroup()
+                        .addGroup(jPinfo_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(jTmodelo_celular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jPinfo_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(jTestado_celular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPinfo_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7)
                             .addComponent(jTmemoria_ram_celular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(jPinfo_celularLayout.createSequentialGroup()
+                        .addGroup(jPinfo_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
                             .addComponent(jTprocessador_celular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jPinfo_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(jTarmazenamento_celular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jPinfo_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
                             .addComponent(jTbateria_celular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(113, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addGroup(jPinfo_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jBcadastrar)
+                    .addComponent(jBAlterar)
+                    .addComponent(jBexcluir)
+                    .addComponent(jBlimpar)
+                    .addComponent(jBcancelar))
+                .addGap(35, 35, 35))
+        );
+
+        jLabel9.setFont(new java.awt.Font("Bosch Office Sans", 1, 18)); // NOI18N
+        jLabel9.setText("Nome:");
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel10.setText("Pesquisa do Produto");
+
+        jTPesquisa.setFont(new java.awt.Font("Bosch Office Sans", 1, 12)); // NOI18N
+
+        jBPesquisar.setFont(new java.awt.Font("Bosch Office Sans", 1, 12)); // NOI18N
+        jBPesquisar.setText("Pesquisar");
+        jBPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBPesquisarActionPerformed(evt);
+            }
+        });
+
+        jBLimpar.setFont(new java.awt.Font("Bosch Office Sans", 1, 12)); // NOI18N
+        jBLimpar.setText("Limpar");
+        jBLimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBLimparActionPerformed(evt);
+            }
+        });
+
+        jTtabela_pesquisa.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Código", "Modelo", "Estado", "Memoria RAM", "Processador", "Armazenamento", "Bateria"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTtabela_pesquisa);
+        if (jTtabela_pesquisa.getColumnModel().getColumnCount() > 0) {
+            jTtabela_pesquisa.getColumnModel().getColumn(0).setResizable(false);
+            jTtabela_pesquisa.getColumnModel().getColumn(1).setResizable(false);
+            jTtabela_pesquisa.getColumnModel().getColumn(2).setResizable(false);
+            jTtabela_pesquisa.getColumnModel().getColumn(3).setResizable(false);
+            jTtabela_pesquisa.getColumnModel().getColumn(4).setResizable(false);
+            jTtabela_pesquisa.getColumnModel().getColumn(5).setResizable(false);
+            jTtabela_pesquisa.getColumnModel().getColumn(6).setResizable(false);
+        }
+
+        javax.swing.GroupLayout jPtabela_celularLayout = new javax.swing.GroupLayout(jPtabela_celular);
+        jPtabela_celular.setLayout(jPtabela_celularLayout);
+        jPtabela_celularLayout.setHorizontalGroup(
+            jPtabela_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPtabela_celularLayout.createSequentialGroup()
+                .addContainerGap(19, Short.MAX_VALUE)
+                .addGroup(jPtabela_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPtabela_celularLayout.createSequentialGroup()
+                        .addComponent(jTPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jBPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jBLimpar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPtabela_celularLayout.createSequentialGroup()
+                        .addGroup(jPtabela_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1050, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 25, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPtabela_celularLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel10)
+                .addGap(446, 446, 446))
+        );
+        jPtabela_celularLayout.setVerticalGroup(
+            jPtabela_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPtabela_celularLayout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPtabela_celularLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBPesquisar)
+                    .addComponent(jBLimpar))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -136,39 +423,82 @@ public class Celular extends javax.swing.JDialog {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 49, Short.MAX_VALUE)
+                .addComponent(jPtabela_celular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(48, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addGap(498, 498, 498))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(56, 56, 56)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(86, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPinfo_celular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(173, 173, 173))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLID, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(346, 346, 346)
+                        .addComponent(jLabel2)
+                        .addGap(511, 511, 511))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(jLabel2)
-                .addGap(41, 41, 41)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(513, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(jLabel2)
+                        .addGap(37, 37, 37)
+                        .addComponent(jPinfo_celular, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(64, 64, 64)
+                        .addComponent(jLID, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(jPtabela_celular, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jBcadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBcadastrarActionPerformed
+        cadastro_celular();
+        limpartabela();
+        pesquisa_celular();
+        limparcampos(jPinfo_celular);
+    }//GEN-LAST:event_jBcadastrarActionPerformed
+
+    private void jBAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAlterarActionPerformed
+        alterar_celular();
+        limparcampos(jPinfo_celular);
+        pesquisa_celular();
+    }//GEN-LAST:event_jBAlterarActionPerformed
+
+    private void jBexcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBexcluirActionPerformed
+        excluir_celular();
+        limparcampos(jPinfo_celular);
+        pesquisa_celular();
+    }//GEN-LAST:event_jBexcluirActionPerformed
+
+    private void jBlimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBlimparActionPerformed
+        limparcampos(jPinfo_celular);
+    }//GEN-LAST:event_jBlimparActionPerformed
+
+    private void jBPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBPesquisarActionPerformed
+        pesquisa_celular();
+    }//GEN-LAST:event_jBPesquisarActionPerformed
+
+    private void jBLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBLimparActionPerformed
+        limparcampos(jPtabela_celular);
+    }//GEN-LAST:event_jBLimparActionPerformed
 
     /**
      * @param args the command line arguments
@@ -214,20 +544,34 @@ public class Celular extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBAlterar;
+    private javax.swing.JButton jBLimpar;
+    private javax.swing.JButton jBPesquisar;
+    private javax.swing.JButton jBcadastrar;
+    private javax.swing.JButton jBcancelar;
+    private javax.swing.JButton jBexcluir;
+    private javax.swing.JButton jBlimpar;
+    private javax.swing.JLabel jLID;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPinfo_celular;
+    private javax.swing.JPanel jPtabela_celular;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField jTPesquisa;
     private javax.swing.JTextField jTarmazenamento_celular;
     private javax.swing.JTextField jTbateria_celular;
     private javax.swing.JTextField jTestado_celular;
     private javax.swing.JTextField jTmemoria_ram_celular;
     private javax.swing.JTextField jTmodelo_celular;
     private javax.swing.JTextField jTprocessador_celular;
+    private javax.swing.JTable jTtabela_pesquisa;
     // End of variables declaration//GEN-END:variables
 }
