@@ -26,6 +26,10 @@ public class Celular extends javax.swing.JDialog {
     public Celular(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setResizable(false);
+        setLocationRelativeTo(null);
+        pesquisa_celular();
+        initTableListener();
     }
     Banco_dados bd = new Banco_dados();
     private void cadastro_celular(){
@@ -122,7 +126,6 @@ public class Celular extends javax.swing.JDialog {
     }
     private static void limparcampos(JPanel jPanel){
         Component[] componentes = jPanel.getComponents();
-        JOptionPane.showMessageDialog(null, "Tabom");
         for(Component componente : componentes){
             if(componente instanceof JTextField){
                 JTextField camposTF = (JTextField)componente;
@@ -133,6 +136,23 @@ public class Celular extends javax.swing.JDialog {
     private void limpartabela(){
         DefaultTableModel table = (DefaultTableModel)jTtabela_pesquisa.getModel();
         table.setNumRows(0);
+    }
+    private void initTableListener() {
+        jTtabela_pesquisa.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int selectedRow = jTtabela_pesquisa.getSelectedRow();
+                if (selectedRow != -1) {
+                    jLID.setText(jTtabela_pesquisa.getValueAt(selectedRow, 0).toString());
+                    jTmodelo_celular.setText(jTtabela_pesquisa.getValueAt(selectedRow, 1).toString());
+                    jTestado_celular.setText(jTtabela_pesquisa.getValueAt(selectedRow, 2).toString());
+                    jTmemoria_ram_celular.setText(jTtabela_pesquisa.getValueAt(selectedRow, 3).toString());
+                    jTprocessador_celular.setText(jTtabela_pesquisa.getValueAt(selectedRow, 4).toString());
+                    jTarmazenamento_celular.setText(jTtabela_pesquisa.getValueAt(selectedRow, 5).toString());
+                    jTbateria_celular.setText(jTtabela_pesquisa.getValueAt(selectedRow, 6).toString());
+                }
+            }
+        });
     }
 
     /**
@@ -497,7 +517,7 @@ public class Celular extends javax.swing.JDialog {
     }//GEN-LAST:event_jBPesquisarActionPerformed
 
     private void jBLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBLimparActionPerformed
-        limparcampos(jPtabela_celular);
+        limpartabela();
     }//GEN-LAST:event_jBLimparActionPerformed
 
     /**
