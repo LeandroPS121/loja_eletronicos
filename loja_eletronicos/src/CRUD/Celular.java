@@ -202,10 +202,12 @@ public class Celular extends javax.swing.JDialog {
         jLID = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel1.setBackground(new java.awt.Color(153, 0, 0));
 
         jLabel2.setFont(new java.awt.Font("Bosch Office Sans", 1, 36)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Celular");
 
         jLabel1.setFont(new java.awt.Font("Bosch Sans", 0, 18)); // NOI18N
