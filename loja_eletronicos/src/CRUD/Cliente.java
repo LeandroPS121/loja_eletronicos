@@ -53,7 +53,7 @@ public class Cliente extends javax.swing.JDialog {
     private void alterar_cliente(){
         if (bd.getConnection()) {
             try{
-               String query = "Update clinete set nome_cliente =?, cpf_cliente =?, cep_cliente =?, email_cliente =? where idcliente = ?";
+               String query = "Update cliente set nome_cliente =?, cpf_cliente =?, cep_cliente =?, email_cliente =? where idcliente = ?";
                PreparedStatement alterar = bd.conexao.prepareStatement(query);
                alterar.setString(1,jTnome_cliente.getText());
                alterar.setString(2,jTcpf_cliente.getText());
