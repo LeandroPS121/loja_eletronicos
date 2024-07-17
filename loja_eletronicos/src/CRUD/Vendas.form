@@ -199,6 +199,11 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="jTNome_cliente">
+              <Properties>
+                <Property name="disabledTextColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="cc" green="cc" red="cc" type="rgb"/>
+                </Property>
+              </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTNome_clienteActionPerformed"/>
               </Events>
@@ -212,12 +217,27 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="jTCPF_cliente">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="cc" green="cc" red="cc" type="rgb"/>
+                </Property>
+                <Property name="focusable" type="boolean" value="false"/>
+              </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="jTCodigo_cliente">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="cc" green="cc" red="cc" type="rgb"/>
+                </Property>
+                <Property name="focusable" type="boolean" value="false"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanel3">
+          <Properties>
+            <Property name="focusable" type="boolean" value="false"/>
+          </Properties>
 
           <Layout>
             <DimensionLayout dim="0">
@@ -261,7 +281,7 @@
                                       </Group>
                                       <EmptySpace min="-2" pref="68" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jTIniciar_venda" min="-2" max="-2" attributes="0"/>
                                           <Group type="102" alignment="1" attributes="0">
                                               <Component id="jButton2" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
@@ -286,7 +306,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jTNota_fiscal" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jTIniciar_venda" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -328,6 +348,12 @@
           </Layout>
           <SubComponents>
             <Component class="javax.swing.JTextField" name="jTDescricao_celular">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="cc" green="cc" red="cc" type="rgb"/>
+                </Property>
+                <Property name="focusable" type="boolean" value="false"/>
+              </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel9">
               <Properties>
@@ -338,18 +364,42 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="jTQuant_celular">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="cc" green="cc" red="cc" type="rgb"/>
+                </Property>
+                <Property name="focusable" type="boolean" value="false"/>
+              </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTQuant_celularActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="jTCod_celular">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="cc" green="cc" red="cc" type="rgb"/>
+                </Property>
+                <Property name="focusable" type="boolean" value="false"/>
+              </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTCod_celularActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="jTPreco_celular">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="cc" green="cc" red="cc" type="rgb"/>
+                </Property>
+                <Property name="focusable" type="boolean" value="false"/>
+              </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="jTValor_total">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="cc" green="cc" red="cc" type="rgb"/>
+                </Property>
+                <Property name="focusable" type="boolean" value="false"/>
+              </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
@@ -360,6 +410,12 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="jTNota_fiscal">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="cc" green="cc" red="cc" type="rgb"/>
+                </Property>
+                <Property name="focusable" type="boolean" value="false"/>
+              </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel7">
               <Properties>
@@ -393,12 +449,12 @@
                 <Property name="text" type="java.lang.String" value="Quantidade:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton1">
+            <Component class="javax.swing.JButton" name="jTIniciar_venda">
               <Properties>
                 <Property name="text" type="java.lang.String" value="INICIAR VENDA"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTIniciar_vendaActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="jButton2">
@@ -558,6 +614,12 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="jTSoma_total1">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="cc" green="cc" red="cc" type="rgb"/>
+            </Property>
+            <Property name="focusable" type="boolean" value="false"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

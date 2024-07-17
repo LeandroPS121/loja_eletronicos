@@ -17,105 +17,106 @@ import javax.swing.table.DefaultTableModel;
  * @author sil9jvl
  */
 public class Vendas extends javax.swing.JDialog {
-    
+
     public Vendas(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
     Banco_dados bd = new Banco_dados();
-    
-    private void pesquisa_cliente(){
-        if(bd.getConnection()){
-            try{
+
+    private void pesquisa_cliente() {
+        if (bd.getConnection()) {
+            try {
                 String query = "select * from cliente where nome_cliente like ?";
                 PreparedStatement stmt = bd.conexao.prepareStatement(query);
-                stmt.setString(1,"%"+jTNome_cliente.getText()+"%");
+                stmt.setString(1, "%" + jTNome_cliente.getText() + "%");
                 ResultSet rs = stmt.executeQuery();
-                while(rs.next()){
+                while (rs.next()) {
                     String add1 = rs.getString("idcliente");
                     jTCodigo_cliente.setText(add1);
                     String add2 = rs.getString("nome_cliente");
                     jTNome_cliente.setText(add2);
                     String add3 = rs.getString("cpf_cliente");
                     jTCPF_cliente.setText(add3);
-                    
+
                 }
                 stmt.close();
                 bd.conexao.close();
-            }catch(SQLException e){
+            } catch (SQLException e) {
                 System.out.println("Erro ao pesquisar" + e.toString());
             }
         }
     }
-    
-    private void venda(){
-        if(bd.getConnection()){
-            try{
+
+    private void venda() {
+        if (bd.getConnection()) {
+            try {
                 String query = "insert venda(cliente_idcliente) values(?)";
                 PreparedStatement stmt = bd.conexao.prepareStatement(query);
-                stmt.setString(1,jTCodigo_cliente.getText());
+                stmt.setString(1, jTCodigo_cliente.getText());
                 stmt.executeUpdate();
                 stmt.close();
                 bd.conexao.close();
-            }catch(SQLException e){
-                JOptionPane.showMessageDialog(null, "Erro de gravação" +e.toString());
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Erro de gravação" + e.toString());
             }
         }
     }
-    
-    private void pesquisa_celular(){
-        if(bd.getConnection()){
-            try{
+
+    private void pesquisa_celular() {
+        if (bd.getConnection()) {
+            try {
                 String query = "select * from celular where id_celular like ?";
                 PreparedStatement stmt = bd.conexao.prepareStatement(query);
-                stmt.setString(1,"%"+jTCod_celular.getText()+"%");
+                stmt.setString(1, "%" + jTCod_celular.getText() + "%");
                 ResultSet rs = stmt.executeQuery();
-                while(rs.next()){
+                while (rs.next()) {
                     String add1 = rs.getString("id_celular");
                     jTCodigo_cliente.setText(add1);
                     String add2 = rs.getString("modelo_celular");
                     jTDescricao_celular.setText(add2);
                     String add3 = rs.getString("preco_celular");
                     jTPreco_celular.setText(add3);
-                    
+
                 }
                 stmt.close();
                 bd.conexao.close();
-            }catch(SQLException e){
+            } catch (SQLException e) {
                 System.out.println("Erro ao pesquisar" + e.toString());
             }
         }
     }
-    
-    private void idvenda(){
+
+    private void idvenda() {
         if (bd.getConnection()) {
-            try{
+            try {
                 String query = "select max(idvenda) as idvenda from venda";
                 PreparedStatement stmt = bd.conexao.prepareStatement(query);
                 ResultSet rs = stmt.executeQuery();
-                while(rs.next()){
+                while (rs.next()) {
                     String add1 = rs.getString("idvenda");
                     jTNota_fiscal.setText(add1);
                 }
                 stmt.close();
                 bd.conexao.close();
-            }catch(SQLException e){
-                JOptionPane.showMessageDialog(null, "Erro de gravação no Banco" +e.toString());
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Erro de gravação no Banco" + e.toString());
             }
-            
+
         }
     }
-    float quantidade,valor,total;
-    private void calcular_celular(){
+    float quantidade, valor, total;
+
+    private void calcular_celular() {
         quantidade = Float.parseFloat(jTQuant_celular.getText());
         valor = Float.parseFloat(jTPreco_celular.getText());
-        total = quantidade*valor;
+        total = quantidade * valor;
         jTValor_total.setText(String.valueOf(total));
     }
-    
-    private void adicionar_itens_venda(){
-        if(bd.getConnection()){
-            try{
+
+    private void adicionar_itens_venda() {
+        if (bd.getConnection()) {
+            try {
                 String query = "insert venda_has_celular(venda_idvenda,celular_id_celular,quantidade,valorunit,total) values(?,?,?,?,?)";
                 PreparedStatement stmt = bd.conexao.prepareStatement(query);
                 stmt.setString(1, jTNota_fiscal.getText());
@@ -123,63 +124,62 @@ public class Vendas extends javax.swing.JDialog {
                 stmt.setString(3, jTQuant_celular.getText());
                 stmt.setString(4, jTPreco_celular.getText());
                 stmt.setString(5, jTValor_total.getText());
-                
+
                 stmt.executeUpdate();
                 stmt.close();
                 bd.conexao.close();
                 consultarnf();
-            }catch(SQLException e){
-                JOptionPane.showMessageDialog(null, "Erro:" +e.toString());
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Erro:" + e.toString());
             }
         }
     }
-    
-    private void consultarnf(){
-        if(bd.getConnection()){
-            try{
+
+    private void consultarnf() {
+        if (bd.getConnection()) {
+            try {
                 String query = "select venda_has_celular.celular_id_celular,"
-                        +"celular.modelo_celular,"
-                        +"venda_has_celular.valorunit,"
-                        +"venda_has_celular.quantidade,"
-                        +"venda_has_celular.total"
-                        +" from venda_has_celular"
-                        +" inner join celular on venda_has_celular.celular_id_celular = venda_has_celular.celular_id_celular"
-                        +" where venda_has_celular.venda_idvenda like ?";
+                        + "celular.modelo_celular,"
+                        + "venda_has_celular.valorunit,"
+                        + "venda_has_celular.quantidade,"
+                        + "venda_has_celular.total"
+                        + " from venda_has_celular"
+                        + " inner join celular on venda_has_celular.celular_id_celular = venda_has_celular.celular_id_celular"
+                        + " where venda_has_celular.venda_idvenda like ?";
                 PreparedStatement stmt = bd.conexao.prepareStatement(query);
-                stmt.setString(1,"%"+jTNota_fiscal.getText()+"%");
+                stmt.setString(1, "%" + jTNota_fiscal.getText() + "%");
                 ResultSet rs;
                 rs = stmt.executeQuery();
-                DefaultTableModel model = (DefaultTableModel)jTtabela_pesquisa.getModel();
+                DefaultTableModel model = (DefaultTableModel) jTtabela_pesquisa.getModel();
                 model.setNumRows(0);
-                while(rs.next()){
+                while (rs.next()) {
                     model.addRow(new Object[]{
                         rs.getString("celular_id_celular"),
                         rs.getString("modelo_celular"),
                         rs.getString("valorunit"),
                         rs.getString("quantidade"),
-                        rs.getString("total"),
-                    });
+                        rs.getString("total"),});
                 }
-            }catch(SQLException erro){
-                JOptionPane.showMessageDialog(null, "Erro de pesquisaa"+erro.toString());
+            } catch (SQLException erro) {
+                JOptionPane.showMessageDialog(null, "Erro de pesquisaa" + erro.toString());
             }
         }
     }
-    
-    private void somanf(){
-        if(bd.getConnection()){
-            try{
+
+    private void somanf() {
+        if (bd.getConnection()) {
+            try {
                 String query = "select sum(total) as total from venda_has_celular where venda_idvenda = ?";
                 PreparedStatement stmt = bd.conexao.prepareStatement(query);
-                stmt.setString(1,jTNota_fiscal.getText());
+                stmt.setString(1, jTNota_fiscal.getText());
                 ResultSet rs = stmt.executeQuery();
-                if(rs.next()){
+                if (rs.next()) {
                     String add1 = rs.getString("total");
                     jTSoma_total.setText(add1);
                 }
                 rs.close();
-            }catch(SQLException erro){
-                JOptionPane.showMessageDialog(null, "Erro de conexao" +erro.toString());
+            } catch (SQLException erro) {
+                JOptionPane.showMessageDialog(null, "Erro de conexao" + erro.toString());
             }
         }
     }
@@ -215,7 +215,7 @@ public class Vendas extends javax.swing.JDialog {
         jLabel6 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        jTIniciar_venda = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTtabela_pesquisa = new javax.swing.JTable();
@@ -241,6 +241,7 @@ public class Vendas extends javax.swing.JDialog {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setText("Nome:");
 
+        jTNome_cliente.setDisabledTextColor(new java.awt.Color(204, 204, 204));
         jTNome_cliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTNome_clienteActionPerformed(evt);
@@ -249,6 +250,12 @@ public class Vendas extends javax.swing.JDialog {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Código Cliente");
+
+        jTCPF_cliente.setBackground(new java.awt.Color(204, 204, 204));
+        jTCPF_cliente.setFocusable(false);
+
+        jTCodigo_cliente.setBackground(new java.awt.Color(204, 204, 204));
+        jTCodigo_cliente.setFocusable(false);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -285,23 +292,41 @@ public class Vendas extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
+        jPanel3.setFocusable(false);
+
+        jTDescricao_celular.setBackground(new java.awt.Color(204, 204, 204));
+        jTDescricao_celular.setFocusable(false);
+
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setText("Valor Total:");
 
+        jTQuant_celular.setBackground(new java.awt.Color(204, 204, 204));
+        jTQuant_celular.setFocusable(false);
         jTQuant_celular.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTQuant_celularActionPerformed(evt);
             }
         });
 
+        jTCod_celular.setBackground(new java.awt.Color(204, 204, 204));
+        jTCod_celular.setFocusable(false);
         jTCod_celular.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTCod_celularActionPerformed(evt);
             }
         });
 
+        jTPreco_celular.setBackground(new java.awt.Color(204, 204, 204));
+        jTPreco_celular.setFocusable(false);
+
+        jTValor_total.setBackground(new java.awt.Color(204, 204, 204));
+        jTValor_total.setFocusable(false);
+
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Cód. Celular:");
+
+        jTNota_fiscal.setBackground(new java.awt.Color(204, 204, 204));
+        jTNota_fiscal.setFocusable(false);
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setText("Preço Unitário:");
@@ -315,10 +340,10 @@ public class Vendas extends javax.swing.JDialog {
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel8.setText("Quantidade:");
 
-        jButton1.setText("INICIAR VENDA");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jTIniciar_venda.setText("INICIAR VENDA");
+        jTIniciar_venda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jTIniciar_vendaActionPerformed(evt);
             }
         });
 
@@ -364,7 +389,7 @@ public class Vendas extends javax.swing.JDialog {
                                         .addComponent(jLabel6)))
                                 .addGap(68, 68, 68)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton1)
+                                    .addComponent(jTIniciar_venda)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                                         .addComponent(jButton2)
                                         .addGap(10, 10, 10))))
@@ -380,7 +405,7 @@ public class Vendas extends javax.swing.JDialog {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jTNota_fiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(jTIniciar_venda))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -463,6 +488,9 @@ public class Vendas extends javax.swing.JDialog {
         jLabel15.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(255, 255, 255));
         jLabel15.setText("R$");
+
+        jTSoma_total1.setBackground(new java.awt.Color(204, 204, 204));
+        jTSoma_total1.setFocusable(false);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -570,20 +598,25 @@ public class Vendas extends javax.swing.JDialog {
         somanf();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        venda();
-        idvenda();
-        
-   
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void jTIniciar_vendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTIniciar_vendaActionPerformed
+
+        if (!(jTCod_celular.getText()).equals("")) {
+            jTIniciar_venda.setEnabled(false);
+            jTNome_cliente.setFocusable(true);
+            jTCod_celular.setFocusable(true);
+            jTQuant_celular.setFocusable(true);
+            venda();
+            idvenda();
+        }
+
+    }//GEN-LAST:event_jTIniciar_vendaActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-      
+
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        Vendas ven = new Vendas(null,true);
+        Vendas ven = new Vendas(null, true);
         this.dispose();
         ven.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -638,7 +671,6 @@ public class Vendas extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -667,6 +699,7 @@ public class Vendas extends javax.swing.JDialog {
     private javax.swing.JTextField jTCod_celular;
     private javax.swing.JTextField jTCodigo_cliente;
     private javax.swing.JTextField jTDescricao_celular;
+    private javax.swing.JButton jTIniciar_venda;
     private javax.swing.JTextField jTNome_cliente;
     private javax.swing.JTextField jTNota_fiscal;
     private javax.swing.JTextField jTPreco_celular;
