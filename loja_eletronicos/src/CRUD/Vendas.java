@@ -5,6 +5,7 @@
 package CRUD;
 
 import CONEXAO_BANCO.Banco_dados;
+import MODULO_INICIAL.Home;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -432,8 +433,18 @@ public class Vendas extends javax.swing.JDialog {
         jLabel13.setText("R$");
 
         jButton3.setText("Nova Venda");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Cancelar");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Finalizar Venda");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -465,8 +476,7 @@ public class Vendas extends javax.swing.JDialog {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(188, 188, 188)
-                        .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 175, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel11)))
                 .addGap(35, 35, 35))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -489,7 +499,7 @@ public class Vendas extends javax.swing.JDialog {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -550,6 +560,18 @@ public class Vendas extends javax.swing.JDialog {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
       
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        Vendas ven = new Vendas(null,true);
+        this.dispose();
+        ven.setVisible(true);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        Home h = new Home();
+        this.dispose();
+        h.setVisible(true);
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
