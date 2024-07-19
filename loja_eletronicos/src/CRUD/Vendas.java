@@ -78,8 +78,7 @@ public class Vendas extends javax.swing.JDialog {
                 stmt.setString(1,"%"+jTCod_celular.getText()+"%");
                 ResultSet rs = stmt.executeQuery();
                 while(rs.next()){
-                    String add1 = rs.getString("id_celular");
-                    jTCodigo_cliente.setText(add1);
+
                     String add2 = rs.getString("modelo_celular");
                     jTDescricao_celular.setText(add2);
                     String add3 = rs.getString("preco_celular");
