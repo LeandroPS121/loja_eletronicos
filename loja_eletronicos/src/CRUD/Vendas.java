@@ -22,6 +22,8 @@ public class Vendas extends javax.swing.JDialog {
     public Vendas(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        jTValor_pago.setEnabled(false);
+        jButton5.setEnabled(false);
     }
     Banco_dados bd = new Banco_dados();
     
@@ -180,7 +182,7 @@ public class Vendas extends javax.swing.JDialog {
                 ResultSet rs = stmt.executeQuery();
                 if(rs.next()){
                     String add1 = rs.getString("total");
-                    jTValor_pago.setText(add1);
+                    jTSoma_total.setText(add1);
                 }
                 rs.close();
             }catch(SQLException erro){
@@ -228,13 +230,13 @@ public class Vendas extends javax.swing.JDialog {
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        jTValor_pago = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jTSoma_total = new javax.swing.JTextField();
+        jTValor_pago = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -469,11 +471,20 @@ public class Vendas extends javax.swing.JDialog {
         jLabel15.setForeground(new java.awt.Color(255, 255, 255));
         jLabel15.setText("R$");
 
+        jTSoma_total.setEditable(false);
+        jTSoma_total.setBackground(new java.awt.Color(204, 204, 204));
+        jTSoma_total.setFocusable(false);
+        jTSoma_total.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                jTSoma_totalCaretUpdate(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(36, 36, 36)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel10)
@@ -496,7 +507,7 @@ public class Vendas extends javax.swing.JDialog {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(jLabel14)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                             .addComponent(jLabel15)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jTSoma_total, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -505,7 +516,7 @@ public class Vendas extends javax.swing.JDialog {
                             .addGap(18, 18, 18)
                             .addComponent(jLabel13)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jTValor_pago, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jTValor_pago))))
                 .addGap(35, 35, 35))
         );
         jPanel1Layout.setVerticalGroup(
@@ -520,7 +531,7 @@ public class Vendas extends javax.swing.JDialog {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -540,7 +551,7 @@ public class Vendas extends javax.swing.JDialog {
                     .addComponent(jLabel12)
                     .addComponent(jLabel13)
                     .addComponent(jTValor_pago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(87, 87, 87))
+                .addGap(119, 119, 119))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -581,10 +592,12 @@ public class Vendas extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        armazenarDados();
-        Tela_pagamento telPag = new Tela_pagamento(null,true);
-        this.dispose();
-        telPag.setVisible(true);
+        if(!(jTSoma_total.getText().equals("")) && !(jTValor_pago.getText().equals(""))){
+            armazenarDados();
+            Tela_pagamento telPag = new Tela_pagamento(null,true);
+            this.dispose();
+            telPag.setVisible(true);
+        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -598,6 +611,14 @@ public class Vendas extends javax.swing.JDialog {
         this.dispose();
         h.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jTSoma_totalCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_jTSoma_totalCaretUpdate
+        if(!(jTSoma_total.getText().equals(""))){
+            jButton5.setEnabled(true);
+            jTValor_pago.setEnabled(true);
+            JOptionPane.showMessageDialog(null, "testando");
+        }
+    }//GEN-LAST:event_jTSoma_totalCaretUpdate
 
     /**
      * @param args the command line arguments

@@ -3,6 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package CRUD;
+import CONEXAO_BANCO.Banco_dados;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,8 +22,34 @@ public class Tela_pagamento extends javax.swing.JDialog {
     public Tela_pagamento(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        JOptionPane.showMessageDialog(null, "Testando: "+venda.notaFiscal);
-        //exibeNotaFiscal();
+        exibeNotaFiscal();
+    }
+    Banco_dados bd = new Banco_dados();
+    public void exibeNotaFiscal(){
+        if (bd.getConnection()){
+            try{
+                String query = "select c.nome_cliente,vh.quantidade,cel.modelo_celular,sum(vh.total) as total_venda from venda as v"
+                    +" inner join venda_has_celular as vh on v.idvenda = vh.venda_idvenda"
+                    +" inner join cliente c on v.cliente_idcliente = c.idcliente"
+                    +" inner join celular cel on vh.celular_id_celular = cel.id_celular"
+                    +" where vh.venda_idvenda = ?"
+                    +" group by c.nome_cliente,vh.quantidade,cel.modelo_celular";
+                PreparedStatement stmt = bd.conexao.prepareStatement(query);
+                stmt.setString(1,String.valueOf(Vendas.notaFiscal));
+                ResultSet rs = stmt.executeQuery();
+                JOptionPane.showMessageDialog(null, Vendas.notaFiscal);
+                if(rs.next()){
+                    jTNota_fiscal.setText(String.valueOf(Vendas.notaFiscal));
+                    jTNome_cliente.setText(rs.getString("nome_cliente"));
+                    jTQuantidade_celular.setText(rs.getString("quantidade"));
+                    jTModelo_celular.setText(rs.getString("modelo_celular"));
+                    jTTotal.setText(rs.getString("total_venda"));
+                }
+               
+            }catch(SQLException erro){
+                JOptionPane.showMessageDialog(null, "Erro de conexao" +erro.toString());
+            }
+        }
     }
     
     /*
@@ -83,13 +113,13 @@ public class Tela_pagamento extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(154, 154, 154)
-                    .addComponent(jTNota_fiscal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(513, Short.MAX_VALUE)))
+                    .addComponent(jTNota_fiscal, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(419, Short.MAX_VALUE)))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(145, 145, 145)
-                    .addComponent(jTNome_cliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(522, Short.MAX_VALUE)))
+                    .addComponent(jTNome_cliente, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(421, Short.MAX_VALUE)))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(158, 158, 158)
