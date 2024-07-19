@@ -212,7 +212,6 @@ public class Celular extends javax.swing.JDialog {
         jLabel12 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setLocationByPlatform(true);
         setMaximumSize(new java.awt.Dimension(1200, 720));
         setMinimumSize(new java.awt.Dimension(1200, 720));
         setPreferredSize(new java.awt.Dimension(1200, 720));
@@ -592,7 +591,7 @@ public class Celular extends javax.swing.JDialog {
                         .addComponent(jBcancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel12)))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
