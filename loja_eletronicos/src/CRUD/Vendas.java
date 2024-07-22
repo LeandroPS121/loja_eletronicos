@@ -664,7 +664,7 @@ public class Vendas extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(null, "Troco: "+troco);
             }
         }catch(NumberFormatException e){
-            JOptionPane.showMessageDialog(null, "Erro ao paga");
+            JOptionPane.showMessageDialog(null, "Erro ao pagar");
         }
     }//GEN-LAST:event_jBPagarActionPerformed
 
